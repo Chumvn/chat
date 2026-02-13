@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CHUM P2P Chat - Chat ngang hàng chủ đề Tết Việt Nam">
+    <title>CHUM p2p_chat</title>
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" href="./assets/favicon.ico">
+    <link rel="apple-touch-icon" href="./assets/icons/icon-192.png">
+    <meta name="theme-color" content="#1a1a2e">
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <header id="app-header">
+        <h1 id="app-title">🧧 CHUM p2p_chat</h1>
+        <div id="header-actions">
+            <span id="user-badge"></span>
+            <button id="theme-toggle" aria-label="Toggle Theme">🌙</button>
+        </div>
+    </header>
+
+    <main id="app-main">
+        <!-- CONNECT SCREEN -->
+        <section id="connect-screen" class="screen active">
+            <div class="connect-card neu-card">
+                <div class="card-decoration">🎊</div>
+                <h2>Kết Nối Chat Tết</h2>
+                <p class="subtitle">Tạo phòng rồi cho bạn bè quét QR để vào chat!</p>
+                <div id="user-info" class="neu-inset">
+                    <span id="my-name">...</span>
+                    <button id="refresh-name" class="neu-btn-sm" aria-label="Đổi tên">🔄</button>
+                </div>
+                <div class="connect-actions">
+                    <button id="btn-create" class="neu-btn primary">
+                        <span class="btn-icon">📡</span>
+                        <span>Tạo Phòng</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- CREATE PANEL: just show QR + room ID -->
+            <div id="create-panel" class="panel neu-card hidden">
+                <h3>📡 Phòng Chat Của Bạn</h3>
+                <div id="create-loading" class="step active">
+                    <p>Đang tạo phòng...</p>
+                    <div class="loader">
+                        <div class="loader-dot"></div>
+                        <div class="loader-dot"></div>
+                        <div class="loader-dot"></div>
+                    </div>
+                </div>
+                <div id="create-ready" class="step">
+                    <p class="hint">Bạn bè quét QR hoặc nhập mã dưới để vào chat</p>
+                    <canvas id="room-qr" class="qr-canvas"></canvas>
+                    <div class="room-id-display neu-inset">
+                        <span>Mã phòng:</span>
+                        <strong id="room-id-text">---</strong>
+                        <button id="copy-room-id" class="neu-btn-sm">📋</button>
+                    </div>
+                    <p id="waiting-msg" class="hint">⏳ Đang đợi bạn bè kết nối...</p>
+                </div>
+                <button id="btn-cancel-create" class="neu-btn-sm danger cancel-btn">Hủy</button>
+            </div>
+
+            <!-- AUTO-JOIN: shown when URL has ?room= -->
+            <div id="auto-join-panel" class="panel neu-card hidden">
+                <h3>🚀 Đang vào phòng chat...</h3>
+                <div class="loader">
+                    <div class="loader-dot"></div>
+                    <div class="loader-dot"></div>
+                    <div class="loader-dot"></div>
+                </div>
+                <p class="hint">Kết nối đến bạn chat, vui lòng chờ...</p>
+            </div>
+        </section>
+
+        <!-- CHAT SCREEN -->
+        <section id="chat-screen" class="screen">
+            <div id="chat-header" class="neu-card">
+                <div id="peer-info">
+                    <span id="peer-name">...</span>
+                    <span id="connection-status" class="status-dot online"></span>
+                </div>
+                <button id="btn-disconnect" class="neu-btn-sm danger">❌ Ngắt</button>
+            </div>
+            <div id="chat-messages" class="neu-inset">
+                <div id="messages-container"></div>
+                <div id="empty-chat" class="empty-state">
+                    <span class="empty-icon">🧧</span>
+                    <p>Chúc Mừng Năm Mới! Bắt đầu trò chuyện nào 🎊</p>
+                </div>
+            </div>
+            <div id="chat-input-area" class="neu-card">
+                <div id="file-preview" class="hidden">
+                    <span id="file-name"></span>
+                    <button id="cancel-file" class="neu-btn-sm">❌</button>
+                </div>
+                <div class="input-row">
+                    <button id="btn-attach" class="neu-btn-sm" aria-label="Đính kèm">📎</button>
+                    <input type="text" id="msg-input" placeholder="Nhập tin nhắn..." autocomplete="off">
+                    <button id="btn-send" class="neu-btn-sm primary" aria-label="Gửi">🚀</button>
+                </div>
+                <input type="file" id="file-input" class="hidden">
+            </div>
+        </section>
+    </main>
+
+    <footer id="app-footer">
+        <p>🧧 CHUM p2p_chat — Chúc Mừng Năm Mới 🎊</p>
+    </footer>
+
+
+
+    <div id="toast-container"></div>
+    <canvas id="particle-canvas"></canvas>
+
+    <script src="./peerjs.min.js"></script>
+    <script src="./qrcode.min.js"></script>
+    <script src="./app.js"></script>
+</body>
+
+</html>
