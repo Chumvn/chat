@@ -1,6 +1,6 @@
 {
-    "name": "CHUM p2p_chat",
-    "short_name": "P2P Chat",
+    "name": "CHUM chat",
+    "short_name": "CHUM chat",
     "description": "Chat P2P chủ đề Tết - kết nối qua QR hoặc link",
     "start_url": "./",
     "scope": "./",

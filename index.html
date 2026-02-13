@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="CHUM P2P Chat - Chat ngang hàng chủ đề Tết Việt Nam">
-    <title>CHUM p2p_chat</title>
+    <title>CHUM chat</title>
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="icon" href="./assets/favicon.ico">
     <link rel="apple-touch-icon" href="./assets/icons/icon-192.png">
@@ -15,7 +15,7 @@
 
 <body>
     <header id="app-header">
-        <h1 id="app-title">🧧 CHUM p2p_chat</h1>
+        <h1 id="app-title">🧧 CHUM chat</h1>
         <div id="header-actions">
             <span id="user-badge"></span>
             <button id="theme-toggle" aria-label="Toggle Theme">🌙</button>
@@ -88,17 +88,25 @@
             </div>
             <div id="chat-messages" class="neu-inset">
                 <div id="messages-container"></div>
+                <div id="typing-indicator" class="typing-indicator hidden">
+                    <span class="typing-name"></span>
+                    <span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
+                </div>
                 <div id="empty-chat" class="empty-state">
                     <span class="empty-icon">🧧</span>
                     <p>Chúc Mừng Năm Mới! Bắt đầu trò chuyện nào 🎊</p>
                 </div>
             </div>
             <div id="chat-input-area" class="neu-card">
+                <div id="emoji-panel" class="emoji-panel hidden">
+                    <div class="emoji-grid"></div>
+                </div>
                 <div id="file-preview" class="hidden">
                     <span id="file-name"></span>
                     <button id="cancel-file" class="neu-btn-sm">❌</button>
                 </div>
                 <div class="input-row">
+                    <button id="btn-emoji" class="neu-btn-sm" aria-label="Emoji">😊</button>
                     <button id="btn-attach" class="neu-btn-sm" aria-label="Đính kèm">📎</button>
                     <input type="text" id="msg-input" placeholder="Nhập tin nhắn..." autocomplete="off">
                     <button id="btn-send" class="neu-btn-sm primary" aria-label="Gửi">🚀</button>
@@ -109,7 +117,7 @@
     </main>
 
     <footer id="app-footer">
-        <p>🧧 CHUM p2p_chat — Chúc Mừng Năm Mới 🎊</p>
+        <p>🧧 CHUM chat — Chúc Mừng Năm Mới 🎊</p>
     </footer>
 
 

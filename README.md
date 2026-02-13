@@ -1,45 +1,63 @@
-# CHUM p2p_chat
+# 🧧 CHUM chat
 
-> Chat P2P ngang hàng - Chủ đề Tết Việt Nam 🧧
+Chat P2P ngang hàng — chủ đề Tết Việt Nam
 
-## Tính năng
+## ✨ Tính năng
 
-- 🔗 Kết nối P2P qua WebRTC (không cần server)
-- 📱 Chia sẻ kết nối qua QR code hoặc link
-- 💬 Gửi tin nhắn text realtime
-- 📁 Chia sẻ file trực tiếp
-- 🌸 Hiệu ứng hoa mai khi nhấn vào chat
-- 🍚 Tên ngẫu nhiên theo đồ ăn Tết + icon
-- 🌙 Chế độ sáng/tối (mặc định tối)
-- 📲 PWA - cài đặt như app
+- **📡 Tạo Phòng** — tạo phòng chat với mã 6 ký tự + QR code
+- **📱 Quét QR** — quét QR bằng camera → vào chat ngay
+- **💬 Chat text** — nhắn tin P2P trực tiếp (không qua server)
+- **😊 Emoji** — bảng emoji với 64 icon phổ biến
+- **✍️ Đang nhập...** — hiển thị khi bạn chat đang gõ
+- **📎 Gửi file** — chia sẻ file qua kết nối P2P
+- **🌸 Hoa Mai** — hiệu ứng cánh hoa khi click
+- **🌙/☀️ Dark/Light** — chuyển đổi giao diện
+- **📦 PWA** — cài đặt như app, hoạt động offline
 
-## Cách dùng
+## 🚀 Cách dùng
 
-1. Mở `index.html` trong trình duyệt
-2. Nhấn **Tạo Phòng** → chia sẻ mã cho bạn bè
-3. Bạn bè nhấn **Tham Gia** → dán mã kết nối
-4. Trao đổi mã phản hồi → bắt đầu chat!
+### Tạo phòng (Máy A):
+1. Mở app → nhấn **📡 Tạo Phòng**
+2. QR code + mã phòng hiện ra
+3. Đợi bạn bè quét QR
 
-## Deploy
+### Vào phòng (Máy B):
+1. Quét QR bằng camera điện thoại
+2. Mở link → tự động vào chat!
 
-Push toàn bộ repo lên GitHub → Settings → Pages → Deploy from main branch.
+### Chạy local:
+```bash
+npx http-server -p 8080 -c-1
+```
+Mở `http://localhost:8080` — hai thiết bị cùng WiFi.
 
-## Cấu trúc
+## 🛠 Tech Stack
+
+| Thành phần | Công nghệ |
+|------------|-----------|
+| Kết nối P2P | PeerJS + WebRTC |
+| QR Code | qrcode-generator |
+| UI | Neumorphism CSS |
+| PWA | Service Worker |
+| Backend | **Không có** — 100% client-side |
+
+## 📁 Cấu trúc
 
 ```
-├── index.html
-├── style.css
-├── app.js
+chum-p2p-chat/
+├── index.html          # Giao diện chính
+├── app.js              # Logic app
+├── style.css           # Giao diện Neumorphism
+├── peerjs.min.js       # PeerJS library
+├── qrcode.min.js       # QR code generator
 ├── manifest.webmanifest
-├── sw.js
-├── assets/
-│   ├── favicon.ico
-│   └── icons/
-│       ├── icon-192.png
-│       └── icon-512.png
-└── README.md
+├── sw.js               # Service Worker
+├── serve.bat           # Chạy local server
+└── assets/
+    ├── favicon.ico
+    └── icons/
 ```
 
 ---
 
-CHUM WEBAPP | No backend | GitHub Pages only
+🧧 CHUM chat — Chúc Mừng Năm Mới 🎊
