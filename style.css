@@ -914,86 +914,30 @@ body {
     color: var(--text-secondary);
 }
 
-/* ==================== EMOJI PANEL ==================== */
-.emoji-panel {
-    background: var(--bg-card);
-    border-radius: var(--radius-sm);
-    padding: 8px;
-    margin-bottom: 8px;
-    box-shadow: var(--shadow-neu);
-    max-height: 200px;
-    overflow-y: auto;
+/* ==================== MESSAGE COPY BUTTON ==================== */
+.msg-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 4px;
 }
 
-.emoji-grid {
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    gap: 4px;
-}
-
-.emoji-grid button {
-    font-size: 1.4rem;
+.msg-copy-btn {
     background: none;
     border: none;
     cursor: pointer;
-    padding: 6px;
-    border-radius: 8px;
-    transition: var(--transition);
-    line-height: 1;
+    font-size: 0.75rem;
+    padding: 2px 4px;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.2s, background 0.2s;
 }
 
-.emoji-grid button:hover {
+.msg:hover .msg-copy-btn {
+    opacity: 1;
+}
+
+.msg-copy-btn:hover {
     background: var(--accent-glow);
-    transform: scale(1.2);
-}
-
-/* ==================== TYPING INDICATOR ==================== */
-.typing-indicator {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-    font-style: italic;
-}
-
-.typing-indicator.hidden {
-    display: none;
-}
-
-.typing-name {
-    font-weight: 600;
-    color: var(--accent);
-}
-
-.typing-dots span {
-    display: inline-block;
-    animation: typingBounce 1.2s infinite;
-    font-weight: 700;
-    font-size: 1.2rem;
-    line-height: 1;
-}
-
-.typing-dots span:nth-child(2) {
-    animation-delay: 0.2s;
-}
-
-.typing-dots span:nth-child(3) {
-    animation-delay: 0.4s;
-}
-
-@keyframes typingBounce {
-
-    0%,
-    60%,
-    100% {
-        transform: translateY(0);
-        opacity: 0.4;
-    }
-
-    30% {
-        transform: translateY(-4px);
-        opacity: 1;
-    }
 }

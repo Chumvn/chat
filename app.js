@@ -74,18 +74,6 @@ let pendingFile = null;
 let incomingFile = null;
 let particles = [];
 let particleAnimId = null;
-let typingTimeout = null;
-let isTyping = false;
-
-const EMOJI_LIST = [
-    "😀", "😂", "🥰", "😍", "😎", "🤩", "😇", "🥳",
-    "😘", "😜", "🤗", "🤔", "😴", "🤯", "😱", "🥺",
-    "👍", "👎", "👏", "🙏", "✌️", "🤝", "💪", "🫶",
-    "❤️", "🔥", "⭐", "🌈", "🎉", "🎊", "🧧", "🎁",
-    "🌸", "🌺", "🌹", "💐", "🍀", "🎋", "🎄", "🏮",
-    "🍚", "🥟", "🍖", "🍜", "🧁", "🎂", "🍰", "☕",
-    "😡", "💀", "👻", "🤡", "💩", "🐉", "🦁", "🐱"
-];
 
 
 /* ==================== STATE MANAGEMENT ==================== */
@@ -198,18 +186,11 @@ function setupConnection(connection) {
 function handleIncomingMessage(msg) {
     switch (msg.type) {
         case "text":
-            hideTypingIndicator();
             addMessage(msg.content, "received", msg.sender);
             break;
         case "name":
             peerName = msg.content;
             document.getElementById("peer-name").textContent = peerName;
-            break;
-        case "typing":
-            showTypingIndicator(msg.sender);
-            break;
-        case "stop-typing":
-            hideTypingIndicator();
             break;
         case "file-start":
             incomingFile = { name: msg.name, size: msg.size, chunks: [], received: 0 };
@@ -384,14 +365,6 @@ function sendMessage() {
     const text = input.value.trim();
     if (!text && !pendingFile) return;
 
-    // Hide emoji panel and stop typing
-    document.getElementById("emoji-panel").classList.add("hidden");
-    if (isTyping) {
-        isTyping = false;
-        sendJSON({ type: "stop-typing" });
-        clearTimeout(typingTimeout);
-    }
-
     if (pendingFile) {
         sendFile(pendingFile);
         pendingFile = null;
@@ -422,10 +395,28 @@ function addMessage(content, direction, sender) {
     contentEl.textContent = content;
     msgEl.appendChild(contentEl);
 
-    const timeEl = document.createElement("div");
+    const metaRow = document.createElement("div");
+    metaRow.className = "msg-meta";
+
+    const timeEl = document.createElement("span");
     timeEl.className = "msg-time";
     timeEl.textContent = new Date().toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
-    msgEl.appendChild(timeEl);
+    metaRow.appendChild(timeEl);
+
+    const copyBtn = document.createElement("button");
+    copyBtn.className = "msg-copy-btn";
+    copyBtn.textContent = "📋";
+    copyBtn.title = "Copy tin nhắn";
+    copyBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        navigator.clipboard.writeText(content).then(() => {
+            copyBtn.textContent = "✅";
+            setTimeout(() => { copyBtn.textContent = "📋"; }, 1500);
+        });
+    });
+    metaRow.appendChild(copyBtn);
+
+    msgEl.appendChild(metaRow);
 
     container.appendChild(msgEl);
     container.parentElement.scrollTop = container.parentElement.scrollHeight;
@@ -630,85 +621,6 @@ function showScreen(screenId) {
 }
 
 
-/* ==================== EMOJI PICKER ==================== */
-function initEmojiPanel() {
-    const grid = document.querySelector(".emoji-grid");
-    grid.innerHTML = "";
-    EMOJI_LIST.forEach(emoji => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.textContent = emoji;
-        btn.addEventListener("click", () => insertEmoji(emoji));
-        grid.appendChild(btn);
-    });
-}
-
-function toggleEmojiPanel(e) {
-    if (e) e.stopPropagation();
-    const panel = document.getElementById("emoji-panel");
-    const isHidden = panel.classList.contains("hidden");
-    panel.classList.toggle("hidden");
-    if (isHidden) {
-        // Close panel when clicking outside
-        setTimeout(() => {
-            document.addEventListener("click", closeEmojiOnOutsideClick);
-        }, 10);
-    }
-}
-
-function closeEmojiOnOutsideClick(e) {
-    const panel = document.getElementById("emoji-panel");
-    const btn = document.getElementById("btn-emoji");
-    if (!panel.contains(e.target) && e.target !== btn) {
-        panel.classList.add("hidden");
-        document.removeEventListener("click", closeEmojiOnOutsideClick);
-    }
-}
-
-function insertEmoji(emoji) {
-    const input = document.getElementById("msg-input");
-    const start = input.selectionStart;
-    const end = input.selectionEnd;
-    input.value = input.value.substring(0, start) + emoji + input.value.substring(end);
-    input.focus();
-    input.setSelectionRange(start + emoji.length, start + emoji.length);
-}
-
-
-/* ==================== TYPING INDICATOR ==================== */
-function broadcastTyping() {
-    if (!conn || !conn.open) return;
-    if (!isTyping) {
-        isTyping = true;
-        sendJSON({ type: "typing", sender: myName });
-    }
-    clearTimeout(typingTimeout);
-    typingTimeout = setTimeout(() => {
-        isTyping = false;
-        sendJSON({ type: "stop-typing" });
-    }, 2000);
-}
-
-function showTypingIndicator(name) {
-    const indicator = document.getElementById("typing-indicator");
-    indicator.querySelector(".typing-name").textContent = name || "...";
-    indicator.classList.remove("hidden");
-
-    // Auto-hide after 3s
-    clearTimeout(indicator._hideTimer);
-    indicator._hideTimer = setTimeout(hideTypingIndicator, 3000);
-
-    // Scroll to bottom
-    const chatBox = document.getElementById("chat-messages");
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-function hideTypingIndicator() {
-    const indicator = document.getElementById("typing-indicator");
-    indicator.classList.add("hidden");
-}
-
-
 /* ==================== EVENT BINDING ==================== */
 function bindEvents() {
     document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
@@ -771,18 +683,6 @@ function bindEvents() {
         spawnPetals(e.clientX, e.clientY, 12 + Math.floor(Math.random() * 8));
     });
 
-    // Emoji picker
-    document.getElementById("btn-emoji").addEventListener("click", toggleEmojiPanel);
-
-    // Typing detection
-    document.getElementById("msg-input").addEventListener("input", broadcastTyping);
-    document.getElementById("msg-input").addEventListener("blur", () => {
-        if (isTyping) {
-            isTyping = false;
-            sendJSON({ type: "stop-typing" });
-        }
-    });
-
     window.addEventListener("resize", () => {
         const canvas = document.getElementById("particle-canvas");
         canvas.width = window.innerWidth;
@@ -800,7 +700,6 @@ function init() {
     document.getElementById("my-name").textContent = myName;
     document.getElementById("user-badge").textContent = myName;
 
-    initEmojiPanel();
     bindEvents();
 
     // Check URL for auto-join
