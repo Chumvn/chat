@@ -928,16 +928,13 @@ body {
     border: none;
     cursor: pointer;
     font-size: 0.75rem;
-    padding: 2px 4px;
+    padding: 2px 6px;
     border-radius: 4px;
-    opacity: 0;
+    opacity: 0.6;
     transition: opacity 0.2s, background 0.2s;
 }
 
-.msg:hover .msg-copy-btn {
-    opacity: 1;
-}
-
 .msg-copy-btn:hover {
+    opacity: 1;
     background: var(--accent-glow);
 }
