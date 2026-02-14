@@ -59,6 +59,10 @@ body {
     min-height: 100dvh;
 }
 
+.hidden {
+    display: none !important;
+}
+
 #app-header {
     display: flex;
     align-items: center;
