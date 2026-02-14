@@ -180,8 +180,11 @@ function setupConnection(connection) {
             } catch (err) {
                 addMessage(data, "received");
             }
-        } else if (data instanceof ArrayBuffer) {
-            handleIncomingBinary(data);
+        } else if (data && typeof data === "object" && !(data instanceof ArrayBuffer) && !(data instanceof Uint8Array)) {
+            // PeerJS default serialization delivers parsed objects directly
+            handleIncomingMessage(data);
+        } else if (data instanceof ArrayBuffer || data instanceof Uint8Array) {
+            handleIncomingBinary(data instanceof Uint8Array ? data.buffer : data);
         }
     });
 
@@ -640,9 +643,26 @@ function initEmojiPanel() {
     });
 }
 
-function toggleEmojiPanel() {
+function toggleEmojiPanel(e) {
+    if (e) e.stopPropagation();
     const panel = document.getElementById("emoji-panel");
+    const isHidden = panel.classList.contains("hidden");
     panel.classList.toggle("hidden");
+    if (isHidden) {
+        // Close panel when clicking outside
+        setTimeout(() => {
+            document.addEventListener("click", closeEmojiOnOutsideClick);
+        }, 10);
+    }
+}
+
+function closeEmojiOnOutsideClick(e) {
+    const panel = document.getElementById("emoji-panel");
+    const btn = document.getElementById("btn-emoji");
+    if (!panel.contains(e.target) && e.target !== btn) {
+        panel.classList.add("hidden");
+        document.removeEventListener("click", closeEmojiOnOutsideClick);
+    }
 }
 
 function insertEmoji(emoji) {
